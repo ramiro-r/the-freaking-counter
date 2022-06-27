@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>The Freaking Counter</title>
+  </head>
+  <body>
+    <h1>The Freaking Counter</h1>
+    <main id="app" v-scope="Counter({ initialCount: 0 })" @vue:mounted="mounted">
+      <section>
+        <p>{{ count }}</p>
+        <button @click="toggleListening">{{ !isListening ? "I\'m ready to curse" : "Stop cursing" }}</button>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
