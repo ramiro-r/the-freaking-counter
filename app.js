@@ -1,8 +1,8 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module'
 
-const WORDS = [ 'fuck', 'dog' ];
-// const grammar = '#JSGF V1.0; grammar colors; public <color> = ' + WORDS.join(' | ') + ' ;'
+const WORDS = [ 'fuck', 'f***', 'shit', 'pussy', 'cunt', 'dick', 'asshole', 'fucker', 'f*****', 'motherfucker' ];
 const SpeechRecognitionAPI = window.SpeechRecognition || webkitSpeechRecognition;
+// const grammar = '#JSGF V1.0; grammar colors; public <color> = ' + WORDS.join(' | ') + ' ;'
 // const SpeechGrammarListAPI = window.SpeechGrammarList || webkitSpeechGrammarList;
 // const SpeechRecognitionEventAPI = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
@@ -12,14 +12,14 @@ function Counter(props) {
     speechRecognitionList: null,
     count: props.initialCount,
     isListening: false,
+    startMessage: 'I\'m ready to curse',
+    stopMessage: 'Stop cursing',
+    lastResult: '',
     incrementCounter() {
       this.count++
     },
     mounted() { 
       this.recognition = new SpeechRecognitionAPI();
-      // this.speechRecognitionList = new SpeechGrammarListAPI();
-      // this.speechRecognitionList.addFromString(grammar, 1);
-      // this.recognition.grammars = this.speechRecognitionList;
       this.recognition.continuous = true;
       this.recognition.lang = 'en-US';
       this.recognition.interimResults = true;
@@ -47,12 +47,18 @@ function Counter(props) {
       this.recognition.stop();
     },
     handleVoiceResults(event) {
-      const badWord = event.results[0][0].transcript;
-      console.log('Result received: ' + badWord + '.');
-      if (WORDS.includes(badWord)) {
+      const phraseResult = event.results[0][0].transcript;
+      console.log('Last Result WIthout replace: ' + this.lastResult)
+      console.log('Result received: ' + phraseResult);
+      if (this.lastResult && phraseResult.trim().includes(this.lastResult)) {
+        this.lastResult = phraseResult.replace(this.lastResult, '');
+        console.log('Last Result WITH replace: ' + this.lastResult)
+      } else {
+        this.lastResult = phraseResult
+      }
+      if (WORDS.some(w => this.lastResult.includes(w))) {
         this.incrementCounter();
       }
-      console.log('Confidence: ' + event.results[0][0].confidence);
     },
     handleVoiceError(event) {
       console.log('Error occurred in recognition: ' + event.error);
